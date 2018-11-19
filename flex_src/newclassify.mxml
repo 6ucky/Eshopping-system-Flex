@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="420" height="351" creationComplete="creationCompleteHandler(event)">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.containers.ViewStack;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				tree.dataProvider=classifyData;
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			[Bindable]
+			private var classify:XML = 
+				<list>
+					<department name="旅游度假">
+					</department>
+					<department name="电脑办公">
+					</department>
+					<department name="手机通讯">
+					</department>
+					<department name="汽车">
+					</department>
+					<department name="影像数码">
+					</department>
+					<department name="家用电器">
+					</department>
+					<department name="家居百货">
+					</department>
+					<department name="美容护理">
+					</department>
+					<department name="时尚配饰">
+					</department>
+					<department name="奢侈品">
+					</department>
+					<department name="保险">
+					</department>
+					<department name="VIP商品">
+					</department>
+				</list>;
+			[Bindable]
+			private var classifyData:XMLListCollection = new XMLListCollection(classify.department);
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(classifyname.text == ""){
+					Alert.show("请选择","提示");
+				}
+				else{
+					dispatchEvent(new Event("newclassify",false));
+				}
+			}
+			protected function tree_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				var selectedNode:XML=Tree(event.target).selectedItem as XML;
+				var target:String ="right";
+				classifyname.text = selectedNode.attribute("name");
+			}
+		]]>
+	</mx:Script>
+
+	<mx:TitleWindow x="0" y="0" width="420" height="351" layout="absolute" title="添加新分类" fontSize="12">
+		<mx:Button x="10" y="283" label="确定" visible="true" click="button2_clickHandler(event)"/>
+		<mx:Button x="338" y="283" label="取消" click="button1_clickHandler(event)" visible="true"/>
+		<mx:Tree x="10" y="10" height="267" width="380" labelField ="@name" change="tree_changeHandler(event)" variableRowHeight="true" id="tree"></mx:Tree>
+		<mx:TextInput x="120" y="283" id="classifyname"/>
+	</mx:TitleWindow>
+	
+</mx:Canvas>

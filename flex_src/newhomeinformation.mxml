@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private var modelDetailWindow:Object;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				namel.text = "";
+				charge.text = "";
+				num.text = "";
+				classify.text = "";
+				statement.text = "";
+			}
+
+			protected function linkbutton1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelDetailWindow = PopUpManager.createPopUp(this,newclassify,true);
+				modelDetailWindow.addEventListener("newclassify",insertModelResponse);
+				PopUpManager.centerPopUp(modelDetailWindow as IFlexDisplayObject);
+			}
+			protected function insertModelResponse(event:Event):void{
+				classify.text = modelDetailWindow.classifyname.text;
+				PopUpManager.removePopUp(modelDetailWindow as IFlexDisplayObject);
+			}
+
+			protected function test4_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelDetailWindow = PopUpManager.createPopUp(this,newdestination,true);
+				PopUpManager.centerPopUp(modelDetailWindow as IFlexDisplayObject);
+			}
+
+
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(namel.text == ""){
+					Alert.show("请填写名称","提示");
+				}
+				else{
+					var insertItem:Object = new Object();
+					insertItem.namel = namel.text;
+					insertItem.charge = charge.text;
+					insertItem.num = num.text;
+					insertItem.time = time.text;
+					insertItem.classify = classify.text;
+					insertItem.statement = statement.text;
+					ro.insertproduct(insertItem);
+				}
+			}
+			protected function ro_insertproduct_resultHandler(event):void
+			{
+				Alert.show("添加成功","提示");
+			}
+			protected function ro_return_resultHandler(event):void
+			{
+				Alert.show("修改成功","提示");
+			}
+			protected function ro_insert_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("插入操作失败!","提示");
+			}
+
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.updateproductcharge(namel.text,charge.text);
+			}
+			protected function button5_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.updateproductnum(namel.text,num.text);
+			}
+
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="ro" destination="homesoftware">
+		<mx:method name="insertproduct" result="ro_insertproduct_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="updateproductcharge" result="ro_return_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="updateproductnum" result="ro_return_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<mx:TitleWindow x="0" y="0" width="400" height="300" layout="absolute" title="添加新商品" fontSize="12">
+		<mx:RadioButtonGroup id="radiogroup1"/>
+		<mx:Label x="40" y="10" text="名称"/>
+		<mx:Label x="40" y="76" text="价格"/>
+		<mx:Label x="40" y="108" text="库存"/>
+		<mx:Label x="40" y="140" text="生产日期"/>
+		<mx:Label x="40" y="44" text="分类"/>
+		<mx:Label x="40" y="172" text="描述" id="test1"/>
+		<mx:TextInput x="107" y="10" id="namel"/>
+		<mx:TextInput x="107" y="74" id="charge"/>
+		<mx:TextInput x="107" y="106" id="num"/>
+		<mx:LinkButton x="288" y="42" label="选择分类" click="linkbutton1_clickHandler(event)"/>
+		<mx:Button x="41" y="233" label="保存" click="button3_clickHandler(event)"/>
+		<mx:Button x="164" y="233" label="重置" click="button2_clickHandler(event)"/>
+		<mx:Button x="288" y="233" label="返回" click="button1_clickHandler(event)"/>
+		<mx:DateField x="107" y="138" width="160" id="time"/>
+		<mx:TextInput x="107" y="42" id="classify"/>
+		<mx:TextInput x="107" y="170" id="statement" height="57" width="263"/>
+		<mx:Button x="288" y="74" label="修改" click="button4_clickHandler(event)"/>
+		<mx:Button x="288" y="106" label="修改" click="button5_clickHandler(event)"/>
+	</mx:TitleWindow>
+	
+</mx:Canvas>

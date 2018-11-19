@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="application1_creationCompleteHandler(event)" layout="horizontal" width="100%" height="100%" xmlns:util="ices.sh.util.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.containers.ViewStack;
+			import mx.controls.Alert;
+			import mx.controls.Menu;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.MenuEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private var modelDetailWindow:Object;
+			private var i:int;
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				ro.queryLogin();
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deleteLogin(mcdg.cudg.selectedItems);
+			}
+			protected function ro_quary_resultHandler(event:ResultEvent):void
+			{
+				mcdg.initdata(event.result as ArrayCollection,11);
+				ro.queryallbooklist();
+			}
+			protected function ro_sendproduct_resultHandler(event:ResultEvent):void
+			{
+				ro.queryallbooklist();
+			}
+			protected function ro_query_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			protected function ro_delete_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("删除成功!","提示");
+				ro.queryLogin();
+			}
+			protected function ro_delete_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ExternalInterface.call("function(){window.location.href='http://localhost:8080/davin/Login.html';}");
+			}
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelDetailWindow = PopUpManager.createPopUp
+					
+					(this,newhomeinformation,true);
+				PopUpManager.centerPopUp(modelDetailWindow as 
+					
+					IFlexDisplayObject);
+			}
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.sendproduct(mcdg2.cudg.selectedItems)
+			}
+			protected function ro_querybooklist_resultHandler(event:ResultEvent):void
+			{
+				mcdg2.initdata( event.result as ArrayCollection,11);
+			}
+
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="ro" destination="loginObject">
+		<mx:method name="queryLogin" result="ro_quary_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryallbooklist" result="ro_querybooklist_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="deleteLogin" result="ro_delete_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="sendproduct" result="ro_sendproduct_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<mx:VBox x="0" y="0" width="100%" height="100%">
+		<mx:Label text="信息管理" width="100%" height="42" fontSize="28"/>
+		<mx:Tile width="100%" height="35">
+			<mx:Button label="删除" fontSize="14" click="button1_clickHandler(event)" id="buton"/>
+			<mx:Button label="返回" fontSize="14" click="button2_clickHandler(event)"/>
+			<mx:Button label="添加新商品" fontSize="14" click="button3_clickHandler(event)"/>
+		</mx:Tile>
+		<util:MultipleChoiceDataGrid id="mcdg" width="100%" height="100%">
+			<util:mygridcolumns>
+				<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+				<mx:DataGridColumn headerText="用户名" dataField="username" editable="false"/>
+				<mx:DataGridColumn headerText="密码" dataField="password" editable="false"/>
+			</util:mygridcolumns>
+		</util:MultipleChoiceDataGrid>
+		<mx:Tile width="100%" height="35">
+			<mx:Button label="已发货" fontSize="14" click="button4_clickHandler(event)"/>
+		</mx:Tile>
+		<util:MultipleChoiceDataGrid id="mcdg2" width="100%" height="100%">
+			<util:mygridcolumns>
+				<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+				<mx:DataGridColumn headerText="日期" dataField="id" editable="false"/>
+				<mx:DataGridColumn headerText="用户名" dataField="name" editable="false"/>
+				<mx:DataGridColumn headerText="购买物品" dataField="statement" editable="false"/>
+				<mx:DataGridColumn headerText="是否发货" dataField="send" editable="false"/>
+			</util:mygridcolumns>
+		</util:MultipleChoiceDataGrid>
+	</mx:VBox>
+</mx:Application>

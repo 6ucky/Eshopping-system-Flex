@@ -1,0 +1,1160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="application1_creationCompleteHandler(event)" layout="absolute" xmlns:ns1="*" xmlns:util="ices.sh.util.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.containers.ViewStack;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private var boughtlist1:List;
+			private var modelDetailWindow6:Object;
+			[Bindable] 
+			private var mypagedata:ArrayCollection=new ArrayCollection(); 
+			[Bindable] 
+			private var treelist:XMLList;
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				ro.username("0");
+				ro.queryall();
+				ro.testnews();
+				ro.volumn();
+			}
+			protected function ro_username_resultHandler(event:ResultEvent):void
+			{
+				if((event.result as String)=="游客")
+				{
+					shoppingcar.visible=false;
+					booklistview.visible=false;
+				}
+				usernametext.text = (event.result as String)+"欢迎您！";
+				waterman.text = event.result as String;
+				gasman.text = event.result as String;
+				elecman.text = event.result as String;
+				tvman.text = event.result as String;
+				phoneman.text = event.result as String;
+				netman.text = event.result as String;
+			}
+			protected function water_creationcomplete(event:FlexEvent):void
+			{
+				ro.querywatercharge();
+				ro.username("0");
+			}
+			protected function gas_creationcomplete(event:FlexEvent):void
+			{
+				ro.querygascharge();
+				ro.username("0");
+			}
+			protected function elec_creationcomplete(event:FlexEvent):void
+			{
+				ro.queryeleccharge();
+				ro.username("0");
+			}
+			protected function tv_creationcomplete(event:FlexEvent):void
+			{
+				ro.querytvcharge();
+				ro.username("0");
+			}
+			protected function phone_creationcomplete(event:FlexEvent):void
+			{
+				ro.queryphonecharge();
+				ro.username("0");
+			}
+			protected function net_creationcomplete(event:FlexEvent):void
+			{
+				ro.querynetcharge();
+				ro.username("0");
+			}
+			protected function resetBtn_clickHandler(event:MouseEvent):void
+			{
+				ro.boughtqualify(mcdg2.cudg.selectedItems);
+			}
+			protected function ro_query_resultHandler(event:ResultEvent):void
+			{
+				mcdg1.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_queryuserproduct_resultHandler(event:ResultEvent):void
+			{
+				mcdg2.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_volumn_resultHandler(event:ResultEvent):void
+			{
+				//mypagedata = (event.result as ArrayCollection).namel;
+				initdata1(event.result as ArrayCollection);
+			}
+			public function initdata1(value:ArrayCollection):void
+			{
+				var aNode:Object = new Object();
+				mypagedata.addItem("商品排行榜");
+				for(var i:int=1;i<11;i++)
+				{
+					 var j:int = i-1;
+					//Alert.show(value.getItemAt(i).namel+ "   " + i,"提示");
+					aNode = i+ " "+value.getItemAt(j).namel;
+					mypagedata.addItem(aNode);
+				}
+			}
+			protected function ro_testnews_resultHandler(event:ResultEvent):void
+			{
+				if(event.result as int == 0)
+				{
+					booklistview.label="订单查看";
+				}
+				else if(event.result as int == 1)
+				{
+					booklistview.label="新消息！";
+				}
+			}
+			protected function ro_querybooklist_resultHandler(event:ResultEvent):void
+			{
+				mcdg11.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_query_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			protected function ro_querywater_resultHandler(event:ResultEvent):void
+			{
+				mcdg5.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_querygas_resultHandler(event:ResultEvent):void
+			{
+				mcdg6.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_queryelec_resultHandler(event:ResultEvent):void
+			{
+				mcdg7.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_querytv_resultHandler(event:ResultEvent):void
+			{
+				mcdg8.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_queryphone_resultHandler(event:ResultEvent):void
+			{
+				mcdg9.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_querynet_resultHandler(event:ResultEvent):void
+			{
+				mcdg10.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_querymoney_resultHandler(event:ResultEvent):void
+			{
+				mcdg2.initdata( event.result as ArrayCollection,11);
+			}
+			protected function ro_queryovermoney_resultHandler(event:ResultEvent):void
+			{
+				var x:Number;
+				x = parseFloat(event.result as String);
+				Alert.show(x.toString(),"余额");
+			}
+			protected function ro_querystocks_resultHandler(event:ResultEvent):void
+			{
+				mcdg3.initdata( event.result as ArrayCollection,11);
+			}
+			private var modelDetailWindow:Object;
+			private var modelDetailWindow2:Object;
+			private var modelDetailWindow3:Object;
+			private var modelDetailWindow4:Object;
+			private var modelDetailWindow5:Object;
+			private var searchWindow:Object;
+			[Bindable]
+			private var company:XML = 
+				<list>
+					<department name="全部商品">
+						<employee name="旅游度假"/>
+						<employee name="电脑办公"/>
+						<employee name="手机通讯"/>
+						<employee name="汽车"/>
+						<employee name="影像数码"/>
+						<employee name="家用电器"/>
+						<employee name="家居百货"/>
+						<employee name="美容护理"/>
+						<employee name="时尚配饰"/>
+						<employee name="奢侈品"/>
+						<employee name="保险"/>
+						<employee name="VIP商品"/>
+						</department>
+				</list>;
+			[Bindable] 
+			[Bindable]
+			private var company1:XML = 
+				<list>
+					<department name="报纸杂志">
+					</department>
+					<department name="网络新闻">
+					</department>
+					<department name="电子信息"> 
+					</department>
+				</list>;
+			[Bindable] 
+			[Bindable]
+			private var company2:XML = 
+				<list>
+					<department name="商品排行榜">
+					</department>
+				</list>;
+			[Bindable] 
+			[Bindable]
+			private var listArrC:ArrayCollection ;
+			[Bindable]
+			private var companyData:XMLListCollection = new XMLListCollection(company.department);
+			private var companyData1:XMLListCollection = new XMLListCollection(company1.department);
+			private var companyData2:XMLListCollection = new XMLListCollection(company2.department);
+			private var companyData3:XMLListCollection;
+			private var i:Number=0;
+			private var j:Number=0;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.insertuserproduct(mcdg1.cudg.selectedItems);
+			}
+			protected function removeBtn_clickHandler(event:MouseEvent):void
+			{
+				if(i==1)
+				{
+					ro.deleteModel(mcdg1.cudg.selectedItems);
+				}
+				else if(i==2)
+				{
+					modelDetailWindow2 = PopUpManager.createPopUp(this,newmoneyinformation,true);
+					modelDetailWindow2.addEventListener("newmoneyInformation",insertModelResponse3);
+					PopUpManager.centerPopUp(modelDetailWindow2 as IFlexDisplayObject);
+				}
+				else if(i==3)
+				{
+					modelDetailWindow5 = PopUpManager.createPopUp(this,sellstocks,true);
+					modelDetailWindow5.addEventListener("sellStocks",insertModelResponse5);
+					PopUpManager.centerPopUp(modelDetailWindow5 as IFlexDisplayObject);
+				}
+			}
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deleteuserproduct(mcdg2.cudg.selectedItems);
+			}
+			protected function insertModelResponse1(event:Event):void{
+				var insertItem:Object = new Object();
+				insertItem.namel = modelDetailWindow.namel.text;
+				insertItem.person = modelDetailWindow.person.text;
+				insertItem.company = modelDetailWindow.company.text;
+				insertItem.companytime = modelDetailWindow.companytime.text;
+				insertItem.gettime = modelDetailWindow.gettime.text;
+				insertItem.classify = modelDetailWindow.classify.text;
+				insertItem.place = modelDetailWindow.place.text;
+				ro.insertModel(insertItem);
+			}
+			protected function insertModelResponse3(event:Event):void{
+				var insertItem:Object = new Object();
+				insertItem.node = modelDetailWindow3.node.text;
+				insertItem.namel = modelDetailWindow3.namel.text;
+				insertItem.position = modelDetailWindow3.position.text;
+				insertItem.costprice = modelDetailWindow3.costprice.text;
+				insertItem.cost = modelDetailWindow3.cost;
+				insertItem.market = modelDetailWindow3.market.text;
+				ro.insertstocks(insertItem);
+			}
+			protected function insertModelResponse2(event:Event):void{
+				
+			}
+			protected function insertModelResponse4(event:Event):void{
+				var a,b,c,d,e,f,g:Number;
+				var temp:String;
+				a = parseFloat(mcdg3.cudg.selectedItem.position);
+				b = parseFloat(mcdg3.cudg.selectedItem.cost);
+				c = parseFloat(modelDetailWindow4.position.text);
+				d = parseFloat(modelDetailWindow4.cost);
+				e = b+d;
+				f = a+c;
+				g = e/f;
+				temp = mcdg3.cudg.selectedItem.namel;
+				ro.insertoldstocks(f,g,e,temp);
+			}
+			protected function insertModelResponse5(event:Event):void{
+				
+				ro.queryuserproduct();
+				/*var insertItem:Object = new Object();
+				var a,b,c,d,e,f,g,h,i,j:Number;
+				var temp:String;
+				a = parseFloat(mcdg3.cudg.selectedItem.position);
+				b = parseFloat(mcdg3.cudg.selectedItem.cost);
+				c = parseFloat(modelDetailWindow5.position.text);
+				d = parseFloat(modelDetailWindow5.cost);
+				h = parseFloat(mcdg3.cudg.selectedItem.costprice);
+				i = parseFloat(modelDetailWindow5.costprice.text);
+				e = b-d;
+				f = a-c;
+				temp = mcdg3.cudg.selectedItem.namel;
+				if(f==0)
+				{
+					if(h>i)
+					{
+						j=c * (h - i);
+						Alert.show(j.toString(),"您赔了");
+					}
+					else if(h<i)
+					{
+						j=c * (i - h);
+						Alert.show(j.toString(),"您赚了");
+					}
+					else
+					{
+						Alert.show("您不赚不赔！","提示");
+					}
+					ro.deletestocks(temp);
+				}
+				else if(e>0 && f>0)
+				{
+					g = e/f;
+					if(h>i)
+					{
+						j=c * (h - i);
+						Alert.show(j.toString(),"您赔了");
+					}
+					else if(h<i)
+					{
+						j=c * (i - h);
+						Alert.show(j.toString(),"您赚了");
+					}
+					else
+					{
+						Alert.show("您不赚不赔！","提示");
+					}
+					ro.insertoldstocks(f,g,e,temp);
+				}
+				else
+				{
+					Alert.show("输入错误","提示");
+				}*/
+			}
+			protected function tree_changeHandler(event:ListEvent):void
+			{
+				// TODO Auto-generated method stub
+				var selectedNode:XML=Tree(event.target).selectedItem as XML;
+				var target:String ="right";
+				if(j==1)
+				{
+					hbox.visible=true;
+					mcdg1.visible=true;
+					infohome.title=selectedNode.attribute("name");
+					if(selectedNode.attribute("name")=="全部商品")
+					{
+						i=1;
+						ro.queryall();
+					}
+					else if(selectedNode.attribute("name")=="旅游度假")
+					{
+						i=2;
+						ro.querytravle();
+					}
+					else if(selectedNode.attribute("name")=="电脑办公")
+					{
+						i=3;
+						ro.querycomputer();
+					}
+					else if(selectedNode.attribute("name")=="手机通讯")
+					{
+						i=4;
+						ro.querycellphone();
+					}
+					else if(selectedNode.attribute("name")=="汽车")
+					{
+						i=5;
+						ro.querycar();
+					}
+					else if(selectedNode.attribute("name")=="影像数码")
+					{
+						i=6;
+						ro.queryvideo();
+					}
+					else if(selectedNode.attribute("name")=="家用电器")
+					{
+						i=7;
+						ro.queryelectric();
+					}
+					else if(selectedNode.attribute("name")=="家居百货")
+					{
+						i=8;
+						ro.queryhomething();
+					}
+					else if(selectedNode.attribute("name")=="美容护理")
+					{
+						i=9;
+						ro.querybeauty();
+					}
+					else if(selectedNode.attribute("name")=="时尚配饰")
+					{
+						i=10;
+						ro.queryfashion();
+					}
+					else if(selectedNode.attribute("name")=="奢侈品")
+					{
+						i=11;
+						ro.queryexpensive();
+					}
+					else if(selectedNode.attribute("name")=="保险")
+					{
+						i=12;
+						ro.queryinsurance();
+					}
+					else if(selectedNode.attribute("name")=="VIP商品")
+					{
+						i=13;
+						ro.queryvip();
+					}
+				}
+				else if(j==2)
+				{
+					i=0;
+					mediashow.title=selectedNode.attribute("name");
+					if(selectedNode.attribute("name")=="报纸杂志")
+					{
+						listArrC = new ArrayCollection();
+						listArrC.addItem({Label:"最新书讯",data:"http://rss.book.sohu.com/rss/shuyexinwen.xml"});
+						listArrC.addItem({Label:"精彩书摘",data:"http://rss.book.sohu.com/rss/shuzhai.xml"});
+						listArrC.addItem({Label:"作家在线",data:"http://rss.book.sohu.com/rss/zaixian.xml"});
+						listArrC.addItem({Label:"废弃历史",data:"http://rss.book.sohu.com/rss/lishi.xml"});
+						listArrC.addItem({Label:"新书评",data:"http://rss.book.sohu.com/rss/shuping.xml"});
+					}
+					else if(selectedNode.attribute("name")=="网络新闻")
+					{
+						listArrC = new ArrayCollection();
+						listArrC.addItem({Label:"焦点新闻",data:"http://news.sohu.com/rss/pfocus.xml"});
+						listArrC.addItem({Label:"滚动新闻",data:"http://news.sohu.com/rss/scroll.xml"});
+						listArrC.addItem({Label:"国内新闻",data:"http://news.sohu.com/rss/guonei.xml"});
+						listArrC.addItem({Label:"国际新闻",data:"http://news.sohu.com/rss/guoji.xml"});
+						listArrC.addItem({Label:"社会新闻",data:"http://news.sohu.com/rss/shehui.xml"});
+						listArrC.addItem({Label:"体育新闻",data:"http://news.sohu.com/rss/sports.xml"});
+						listArrC.addItem({Label:"财经新闻",data:"http://news.sohu.com/rss/business.xml"});
+						listArrC.addItem({Label:"IT新闻",data:"http://news.sohu.com/rss/it.xml"});
+						listArrC.addItem({Label:"文教新闻",data:"http://news.sohu.com/rss/learning.xml"});
+						listArrC.addItem({Label:"娱乐新闻",data:"http://news.sohu.com/rss/yule.xml"});
+					}
+					else if(selectedNode.attribute("name")=="电子信息")
+					{
+						listArrC = new ArrayCollection();
+						listArrC.addItem({Label:"数码信息",data:"http://digi.it.sohu.com/rss/shuma.xml"});
+						listArrC.addItem({Label:"硬件行情",data:"http://digi.it.sohu.com/rss/yingjian.xml"});
+						listArrC.addItem({Label:"手机",data:"http://digi.it.sohu.com/rss/shouji.xml"});
+						listArrC.addItem({Label:"笔记本",data:"http://digi.it.sohu.com/rss/bijiben.xml"});
+						listArrC.addItem({Label:"软件下载",data:"http://digi.it.sohu.com/rss/ruanjian.xml"});
+						listArrC.addItem({Label:"数字艺术",data:"http://digi.it.sohu.com/rss/jiaocheng.xml"});
+					}
+				}
+				else
+				{
+					i=14;
+				}
+			}
+			
+			protected function ro_insert_resultHandler(event:ResultEvent):void
+			{
+				ro.queryModelDetail();
+				PopUpManager.removePopUp(modelDetailWindow as IFlexDisplayObject);
+			}
+			
+			
+			protected function ro_insert_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("插入操作失败!","提示");
+			}
+			protected function ro_insertwater_resultHandler(event:ResultEvent):void
+			{
+				ro.querywatercharge();
+			}
+			protected function ro_insertgas_resultHandler(event:ResultEvent):void
+			{
+				ro.querygascharge();
+			}
+			protected function ro_insertelec_resultHandler(event:ResultEvent):void
+			{
+				ro.queryeleccharge();
+			}
+			protected function ro_inserttv_resultHandler(event:ResultEvent):void
+			{
+				ro.querytvcharge();
+			}
+			protected function ro_insertphone_resultHandler(event:ResultEvent):void
+			{
+				ro.queryphonecharge();
+			}
+			protected function ro_insertnet_resultHandler(event:ResultEvent):void
+			{
+				ro.querynetcharge();
+			}
+			protected function ro_insertuserproduct_resultHandler(event:ResultEvent):void
+			{
+				ro.queryuserproduct();
+			}
+			protected function ro_insertmoney_resultHandler(event:ResultEvent):void
+			{
+				ro.querymoneycharge();
+				PopUpManager.removePopUp(modelDetailWindow2 as IFlexDisplayObject);
+			}
+			protected function ro_insertstocks_resultHandler(event:ResultEvent):void
+			{
+				ro.querystocks();
+				PopUpManager.removePopUp(modelDetailWindow3 as IFlexDisplayObject);
+			}
+			protected function ro_insertoldstocks_resultHandler(event:ResultEvent):void
+			{
+				ro.querystocks();
+				PopUpManager.removePopUp(modelDetailWindow4 as IFlexDisplayObject);
+				PopUpManager.removePopUp(modelDetailWindow5 as IFlexDisplayObject);
+			}
+			protected function ro_delete_resultHandler(event:ResultEvent):void
+			{
+				ro.queryModelDetail();
+				Alert.show("删除操作成功!","提示");
+			}
+			
+			
+			protected function ro_delete_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("删除操作失败!","提示");
+			}
+			protected function ro_deletewater_resultHandler(event:ResultEvent):void
+			{
+				ro.querywatercharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deletegas_resultHandler(event:ResultEvent):void
+			{
+				ro.querygascharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deleteelec_resultHandler(event:ResultEvent):void
+			{
+				ro.queryeleccharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deletetv_resultHandler(event:ResultEvent):void
+			{
+				ro.querytvcharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deletephone_resultHandler(event:ResultEvent):void
+			{
+				ro.queryphonecharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deletenet_resultHandler(event:ResultEvent):void
+			{
+				ro.querynetcharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deletemoney_resultHandler(event:ResultEvent):void
+			{
+				ro.querymoneycharge();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_deleteuserproduct_resultHandler(event:ResultEvent):void
+			{
+				ro.queryuserproduct();
+				Alert.show("删除操作成功!","提示");
+			}
+			protected function ro_insertbooklist_resultHandler(event:ResultEvent):void
+			{
+				ro.queryuserproduct();
+				Alert.show("购买成功!","提示");
+			}
+			protected function ro_deletestocks_resultHandler(event:ResultEvent):void
+			{
+				ro.querystocks();
+				PopUpManager.removePopUp(modelDetailWindow5 as IFlexDisplayObject);
+			}
+			protected function ro_search1_resultHandler(event:ResultEvent):void
+			{
+				PopUpManager.removePopUp(searchWindow as IFlexDisplayObject);
+				mcdg1.initdata(event.result as ArrayCollection,11);
+			}
+			
+			
+			protected function ro_search1_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("查询操作失败!","提示");
+			}
+			protected function ro_search2_resultHandler(event:ResultEvent):void
+			{
+				mcdg1.initdata( event.result as ArrayCollection,11);
+				PopUpManager.removePopUp(searchWindow as IFlexDisplayObject);
+			}
+			
+			
+			protected function ro_search2_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("查询操作失败!","提示");
+			}
+			protected function searchModelResponse1(event:ResultEvent):void{
+				modelDetailWindow6 = PopUpManager.createPopUp(this,qualifybuy,true);
+				modelDetailWindow6.addEventListener("qualifybuy",insertModelResponse5);
+				modelDetailWindow6.boughtlist.initdata(event.result as ArrayCollection,11);
+				PopUpManager.centerPopUp(modelDetailWindow6 as IFlexDisplayObject);
+			}
+			protected function searchModelResponse2(event:Event):void{
+				var insertItem:Object = new Object();
+				insertItem.person = searchWindow.person.text;
+				ro.searchModel2(insertItem);
+			}
+
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.productname(mcdg1.cudg.selectedItems);
+				modelDetailWindow2 = PopUpManager.createPopUp(this,picture,true);
+				PopUpManager.centerPopUp(modelDetailWindow2 as IFlexDisplayObject);
+			}
+
+			protected function button4_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub\
+				waterman.text="";
+				watermoney.text="";
+				waterdate.text="";
+			}
+
+
+			protected function button5_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deletewaterModel(mcdg5.cudg.selectedItems);
+			}
+
+
+			protected function button6_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var insertItem:Object = new Object();
+				insertItem.people = gasman.text;
+				insertItem.date = gasdate.text;
+				insertItem.classify = gasclassify.text;
+				insertItem.money = gasmoney.text;
+				ro.insertgasModel(insertItem);
+			}
+
+
+			protected function button7_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				gasman.text="";
+				gasmoney.text="";
+				gasdate.text="";
+			}
+
+
+			protected function button8_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deletegasModel(mcdg6.cudg.selectedItems);
+			}
+
+
+			protected function button9_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var insertItem:Object = new Object();
+				insertItem.people = elecman.text;
+				insertItem.date = elecdate.text;
+				insertItem.classify = elecclassify.text;
+				insertItem.money = elecmoney.text;
+				ro.insertelecModel(insertItem);
+			}
+
+
+			protected function button10_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				elecman.text="";
+				elecmoney.text="";
+				elecdate.text="";
+			}
+
+
+			protected function button11_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deleteelecModel(mcdg7.cudg.selectedItems);
+			}
+
+
+			protected function button12_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var insertItem:Object = new Object();
+				insertItem.people = tvman.text;
+				insertItem.date = tvdate.text;
+				insertItem.classify = tvclassify.text;
+				insertItem.money = tvmoney.text;
+				ro.inserttvModel(insertItem);
+			}
+
+
+			protected function button13_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				tvman.text="";
+				tvmoney.text="";
+				tvdate.text="";
+			}
+
+
+			protected function button14_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deletetvModel(mcdg8.cudg.selectedItems);
+			}
+
+
+			protected function button15_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var insertItem:Object = new Object();
+				insertItem.people = phoneman.text;
+				insertItem.phone = phonenum.text;
+				insertItem.date = phonedate.text;
+				insertItem.classify = phoneclassify.text;
+				insertItem.money = phonemoney.text;
+				ro.insertphoneModel(insertItem);
+			}
+
+
+			protected function button16_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				phoneman.text="";
+				phonemoney.text="";
+				phonedate.text="";
+				phonenum.text="";
+			}
+
+
+			protected function button17_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deletephoneModel(mcdg9.cudg.selectedItems);
+			}
+
+
+			protected function button18_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var insertItem:Object = new Object();
+				insertItem.people = netman.text;
+				insertItem.date = netdate.text;
+				insertItem.classify = netclassify.text;
+				insertItem.money = netmoney.text;
+				ro.insertnetModel(insertItem);
+			}
+
+
+			protected function button19_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				netman.text="";
+				netmoney.text="";
+				netdate.text="";
+			}
+
+
+			protected function button20_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.deletenetModel(mcdg10.cudg.selectedItems);
+			}
+
+
+			protected function linkbutton1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ExternalInterface.call("function()  {window.location.href='http://localhost:8080/davin/Login.html';}");
+			}
+			protected function linkbutton2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				booklistview.label="订单查看";
+				tree1.dataProvider=mypagedata;
+				vsInfo.selectedChild=booklistmenu;
+				j=4;
+				ro.querybooklist();
+			}
+			private var URL:String;
+			
+			private function urlListAdd():void {
+				if(nameText.text != "" && URLText.text!="")
+					listArrC.addItem({Label:nameText.text,data:URLText.text});
+				else
+					Alert.show("名称和地址都为必填项，请填写完全","提示");
+			}
+			protected function ro_boughtqualify_resultHandler(event:Event):void{
+			}
+			
+			private function contentHandler(evt:Event):void {
+				currentState = "first";
+			}
+			
+			private function URLListHandler(evt:Event):void {
+				hs.send();
+				currentState = "";
+				
+			}
+
+			protected function button21_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelDetailWindow2 = PopUpManager.createPopUp(this,searchbook,true);
+				PopUpManager.centerPopUp(modelDetailWindow2 as IFlexDisplayObject);
+			}
+
+			]]>
+	</mx:Script>
+	<mx:states>
+		<mx:State name="first">
+			<mx:RemoveChild target="{contentList}"/>
+			<mx:AddChild relativeTo="{vbox1}" position="lastChild">
+				<mx:VBox width="100%" height="95%" fontSize="12" horizontalAlign="center">
+					<mx:Text text="{contentList.selectedItem.title}" paddingTop="12" color="#0CA125"/>
+					<mx:Text text="{contentList.selectedItem.pubDate}" color="#E13114"/>
+					<mx:TextArea width="100%" height="80%" htmlText="{contentList.selectedItem.description}"/>
+					<mx:LinkButton label="{contentList.selectedItem.link}" 
+								   click="navigateToURL(new URLRequest(contentList.selectedItem.link),'_blank')"
+								   color="#13AF9E" />
+				</mx:VBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{vbox1}" position="lastChild">
+				<mx:Button label="返回" click="currentState=''" fontSize="12"/>
+			</mx:AddChild>
+			
+		</mx:State>
+	</mx:states>
+	<mx:HTTPService url="{URLList.selectedItem.data}" 
+					id="hs" 
+					showBusyCursor="true"/>
+	
+	<mx:RemoteObject id="ro" destination="homesoftware">
+		<mx:method name="deleteuserproduct" result="ro_deleteuserproduct_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="insertbooklist" result="ro_insertbooklist_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="queryuserproduct" result="ro_queryuserproduct_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="testnews" result="ro_testnews_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="volumn" result="ro_volumn_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querybooklist" result="ro_querybooklist_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="insertuserproduct" result="ro_insertuserproduct_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="queryall" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querycomputer" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querycellphone" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querycar" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryelectric" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryexpensive" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryinsurance" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryvip" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querybeauty" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryhomething" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryvideo" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryfashion" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querytravle" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querywatercharge" result="ro_querywater_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querygascharge" result="ro_querygas_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryeleccharge" result="ro_queryelec_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querytvcharge" result="ro_querytv_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryphonecharge" result="ro_queryphone_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querynetcharge" result="ro_querynet_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryModelDetail" result="ro_query_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="insertModel" result="ro_insert_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertwaterModel" result="ro_insertwater_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertgasModel" result="ro_insertgas_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertelecModel" result="ro_insertelec_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="inserttvModel" result="ro_inserttv_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertphoneModel" result="ro_insertphone_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertnetModel" result="ro_insertnet_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="deleteModel" result="ro_delete_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deletewaterModel" result="ro_deletewater_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deletegasModel" result="ro_deletegas_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deleteelecModel" result="ro_deleteelec_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deletetvModel" result="ro_deletetv_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deletephoneModel" result="ro_deletephone_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="deletenetModel" result="ro_deletenet_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+		<mx:method name="searchModel1" result="ro_search1_resultHandler(event)" fault="ro_search1_faultHandler(event)"/>
+		<mx:method name="searchModel2" result="ro_search2_resultHandler(event)" fault="ro_search2_faultHandler(event)"/>
+		<mx:method name="insertmoneycharge" result="ro_insertmoney_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="querymoneycharge" result="ro_querymoney_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="username" result="ro_username_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="queryovermoney" result="ro_queryovermoney_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="querystocks" result="ro_querystocks_resultHandler(event)" fault="ro_query_faultHandler(event)"/>
+		<mx:method name="insertstocks" result="ro_insertstocks_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertoldstocks" result="ro_insertoldstocks_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="productname" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="boughtqualify" result="searchModelResponse1(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="deletestocks" result="ro_deletestocks_resultHandler(event)" fault="ro_delete_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<mx:VBox x="0" y="0" width="100%" height="100%">
+		<mx:Label text="欢迎使用网上购物系统软件" width="100%" height="55.454544" fontSize="28"/>
+		<mx:Tile width="100%" height="40" direction="horizontal" fontSize="20">
+			<mx:LinkButton label="最新消息" click="vsInfo.selectedChild=mediashow;j=2;tree1.dataProvider=companyData1"/>
+			<mx:LinkButton label="商品选择" click="vsInfo.selectedChild=infohome;j=1;tree1.dataProvider=companyData;"/>
+			<mx:LinkButton label="购物车" id="shoppingcar" click="vsInfo.selectedChild=storage;j=3;tree1.dataProvider=mypagedata;ro.queryuserproduct()"/>
+			<mx:LinkButton label="订单查看" id="booklistview" click="linkbutton2_clickHandler(event)"/>
+			<mx:Text width="156" id="usernametext" height="38"/>
+			<mx:LinkButton label="注销" click="linkbutton1_clickHandler(event)"/>
+		</mx:Tile>
+		<mx:HBox width="100%" height="100%">
+			<mx:Tree width="162" height="100%" fontSize="12" labelField ="@name" change="tree_changeHandler(event)" variableRowHeight="true" id="tree1"></mx:Tree>
+			<mx:ViewStack id="vsInfo" width="100%" height="100%">
+				<mx:Panel label="" width="100%" height="100%" layout="absolute" id="infohome" fontSize="12">
+					<mx:HBox width="100%" height="32" x="0" y="0" verticalAlign="middle" horizontalAlign="right" visible="false" id="hbox">
+							<mx:Button label="推荐搜索" fontSize="14" click="button21_clickHandler(event)"/>
+							<mx:Button label="放入购物车" fontSize="14" click="button1_clickHandler(event)" id="bt"/>
+							<mx:Button label="查看详细介绍" fontSize="14" click="button3_clickHandler(event)" id="bt1"/>
+						</mx:HBox>
+						<util:MultipleChoiceDataGrid width="100%" height="100%" x="0" y="32" id="mcdg1" visible="false">
+							<util:mygridcolumns>
+								<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+								<mx:DataGridColumn headerText="名称" dataField="namel" editable="false"/>
+								<mx:DataGridColumn headerText="价格" dataField="charge" editable="false"/>
+								<mx:DataGridColumn headerText="库存" dataField="num" editable="false"/>
+								<mx:DataGridColumn headerText="生产日期" dataField="time" editable="false"/>
+								<mx:DataGridColumn headerText="分类" dataField="classify" editable="false"/>
+							</util:mygridcolumns>
+						</util:MultipleChoiceDataGrid>
+					<util:MultipleChoiceDataGrid id="mcdg3" width="100%" x="0" y="32" height="100%" visible="false">
+						<util:mygridcolumns>
+							<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+							<mx:DataGridColumn headerText="证券代码" dataField="node" editable="false"/>
+							<mx:DataGridColumn headerText="证券名称" dataField="namel" editable="false"/>
+							<mx:DataGridColumn headerText="当前持仓" dataField="position" editable="false"/>
+							<mx:DataGridColumn headerText="成本价" dataField="costprice" editable="false"/>
+							<mx:DataGridColumn headerText="成本值" dataField="cost" editable="false"/>
+							<mx:DataGridColumn headerText="交易市场" dataField="market" editable="false"/>
+						</util:mygridcolumns>
+					</util:MultipleChoiceDataGrid>
+					<mx:TabNavigator x="0" y="10" width="100%" height="100%" id="commoncharge" visible="false">
+						<mx:Canvas label="水费" width="100%" height="100%" creationComplete="water_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg5">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="150" label="添加" visible="true" click="button3_clickHandler(event)"/>
+							<mx:Button x="149" y="150" label="重置" click="button4_clickHandler(event)"/>
+							<mx:Button x="247" y="150" label="删除" click="button5_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="waterman"/>
+							<mx:DateField x="106" y="42" width="193" id="waterdate"/>
+							<mx:Text x="47" y="44" text="日期"/>
+							<mx:ComboBox x="106" y="74" width="193" id="waterclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="106" width="193" id="watermoney"/>
+							<mx:Text x="47" y="79" text="缴款方式"/>
+							<mx:Text x="47" y="110" text="钱数"/>
+						</mx:Canvas>
+						<mx:Canvas label="煤气费" width="100%" height="100%" creationComplete="gas_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg6">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="150" label="添加" visible="true" click="button6_clickHandler(event)"/>
+							<mx:Button x="149" y="150" label="重置" click="button7_clickHandler(event)"/>
+							<mx:Button x="247" y="150" label="删除" click="button8_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="gasman"/>
+							<mx:DateField x="106" y="42" width="193" id="gasdate"/>
+							<mx:Text x="47" y="44" text="日期"/>
+							<mx:ComboBox x="106" y="74" width="193" id="gasclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="106" width="193" id="gasmoney"/>
+							<mx:Text x="47" y="79" text="缴款方式"/>
+							<mx:Text x="47" y="110" text="钱数"/>
+						</mx:Canvas>
+						<mx:Canvas label="电费" width="100%" height="100%" creationComplete="elec_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg7">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="150" label="添加" visible="true" click="button9_clickHandler(event)"/>
+							<mx:Button x="149" y="150" label="重置" click="button10_clickHandler(event)"/>
+							<mx:Button x="247" y="150" label="删除" click="button11_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="elecman"/>
+							<mx:DateField x="106" y="42" width="193" id="elecdate"/>
+							<mx:Text x="47" y="44" text="日期"/>
+							<mx:ComboBox x="106" y="74" width="193" id="elecclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="106" width="193" id="elecmoney"/>
+							<mx:Text x="47" y="79" text="缴款方式"/>
+							<mx:Text x="47" y="110" text="钱数"/>
+						</mx:Canvas>
+						<mx:Canvas label="有线电视" width="100%" height="100%" creationComplete="tv_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg8">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="150" label="添加" visible="true" click="button12_clickHandler(event)"/>
+							<mx:Button x="149" y="150" label="重置" click="button13_clickHandler(event)"/>
+							<mx:Button x="247" y="150" label="删除" click="button14_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="tvman"/>
+							<mx:DateField x="106" y="42" width="193" id="tvdate"/>
+							<mx:Text x="47" y="44" text="日期"/>
+							<mx:ComboBox x="106" y="74" width="193" id="tvclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="106" width="193" id="tvmoney"/>
+							<mx:Text x="47" y="79" text="缴款方式"/>
+							<mx:Text x="47" y="110" text="钱数"/>
+						</mx:Canvas>
+						<mx:Canvas label="电话" width="100%" height="100%" creationComplete="phone_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg9">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="电话号码" dataField="phone" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="180" label="添加" visible="true" click="button15_clickHandler(event)"/>
+							<mx:Button x="149" y="180" label="重置" click="button16_clickHandler(event)"/>
+							<mx:Button x="247" y="180" label="删除" click="button17_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="phoneman"/>
+							<mx:DateField x="106" y="72" width="193" id="phonedate"/>
+							<mx:Text x="47" y="74" text="日期"/>
+							<mx:ComboBox x="106" y="104" width="193" id="phoneclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="136" width="193" id="phonemoney"/>
+							<mx:Text x="47" y="109" text="缴款方式"/>
+							<mx:Text x="47" y="140" text="钱数"/>
+							<mx:TextInput x="106" y="42" width="193" id="phonenum"/>
+							<mx:Text x="47" y="46" text="电话号码"/>
+						</mx:Canvas>
+						<mx:Canvas label="网费" width="100%" height="100%" creationComplete="net_creationcomplete(event)">
+							<mx:Text x="47" y="12" text="交款人"/>
+							<util:MultipleChoiceDataGrid x="357" y="0" height="100%" width="100%" id="mcdg10">
+								<util:mygridcolumns>
+									<mx:DataGridColumn dataField="isChecked" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer" editable="false"/>
+									<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+									<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+									<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+									<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+								</util:mygridcolumns>
+							</util:MultipleChoiceDataGrid>
+							<mx:Button x="47" y="150" label="添加" visible="true" click="button18_clickHandler(event)"/>
+							<mx:Button x="149" y="150" label="重置" click="button19_clickHandler(event)"/>
+							<mx:Button x="247" y="150" label="删除" click="button20_clickHandler(event)"/>
+							<mx:TextInput x="106" y="10" width="193" id="netman"/>
+							<mx:DateField x="106" y="42" width="193" id="netdate"/>
+							<mx:Text x="47" y="44" text="日期"/>
+							<mx:ComboBox x="106" y="74" width="193" id="netclassify">
+								<mx:String>网点</mx:String>
+								<mx:String>网上</mx:String>
+								<mx:String>ATM</mx:String>
+							</mx:ComboBox>
+							<mx:TextInput x="106" y="106" width="193" id="netmoney"/>
+							<mx:Text x="47" y="79" text="缴款方式"/>
+							<mx:Text x="47" y="110" text="钱数"/>
+						</mx:Canvas>
+					</mx:TabNavigator>
+				</mx:Panel>
+				<mx:Panel width="100%" height="100%" layout="absolute" id="mediashow" fontSize="12">
+					<mx:Canvas left="10" right="10" bottom="10" top="10">
+						<mx:HDividedBox width="100%" height="100%">
+							<mx:Canvas width="200" height="100%" backgroundColor="#974F4F">
+								<mx:Canvas x="0" width="100%" height="80%" top="0" backgroundColor="#2F2929" borderColor="#3C6785" borderStyle="solid" borderThickness="2" themeColor="#1E3C4F">
+									<mx:List width="100%" height="100%"
+											 id="URLList"  
+											 dataProvider="{listArrC}"
+											 labelField="Label" 
+											 backgroundColor="#2F2B2B" 
+											 fontSize="12" 
+											 color="#E12815"
+											 itemClick="{URLListHandler(event)}"></mx:List>
+								</mx:Canvas>
+								<mx:VBox x="0" width="100%" height="20%" bottom="0" paddingTop="10" paddingLeft="5" fontSize="12" backgroundColor="#2F2B2B" color="#A1A527" borderStyle="solid" borderColor="#2A8225" themeColor="#1B9248">
+									<mx:Label text="名称："/>
+									<mx:TextInput id="nameText"/>
+									<mx:Label text="URL"/>
+									<mx:TextInput id="URLText"/>
+									<mx:Button label="增加" borderColor="#0A161E" click="urlListAdd()"/>
+								</mx:VBox>
+							</mx:Canvas>
+							<mx:Canvas width="100%" height="100%" backgroundColor="#2F2B2B" borderStyle="solid" borderThickness="2" borderColor="#AD333C" themeColor="#931218">
+								<mx:VBox width="100%" height="100%" id="vbox1">
+									<mx:List width="100%" height="100%" 
+											 id="contentList"
+											 backgroundColor="#2F2B2B"
+											 dataProvider="{hs.lastResult.rss.channel.item}"
+											 labelField="title" 
+											 itemClick="contentHandler(event)"
+											 fontSize="12" color="#14991B"></mx:List>
+								</mx:VBox>
+							</mx:Canvas>
+						</mx:HDividedBox>
+					</mx:Canvas>
+				</mx:Panel>
+				<mx:Panel width="100%" height="100%" layout="absolute" id="storage" fontSize="12" title="购物车">
+					<mx:HBox width="100%" height="32" x="0" y="0" verticalAlign="middle" horizontalAlign="right" visible="true" id="hbox1">
+						<mx:Button label="删除" fontSize="14" click="button2_clickHandler(event)" id="bt2"/>
+						<mx:Button label="结账" fontSize="14" click="resetBtn_clickHandler(event)"/>
+					</mx:HBox>
+					<util:MultipleChoiceDataGrid id="mcdg2" width="100%" x="0" y="32" height="100%" visible="true">
+						<util:mygridcolumns>
+							<mx:DataGridColumn dataField="isChecked" editable="false" headerText=" " width="20" sortable="false" itemRenderer="ices.sh.util.CheckBoxRenderer"/>
+							<mx:DataGridColumn headerText="名称" dataField="namel" editable="false"/>
+							<mx:DataGridColumn headerText="单价" dataField="charge" editable="false"/>
+							<mx:DataGridColumn headerText="生产日期" dataField="time" editable="false"/>
+							<mx:DataGridColumn headerText="分类" dataField="classify" editable="false"/>
+							<mx:DataGridColumn headerText="购买数量" dataField="boughtnum" editable="true"/>
+						</util:mygridcolumns>
+					</util:MultipleChoiceDataGrid>
+				</mx:Panel>	
+				<mx:Panel width="100%" height="100%" layout="absolute" id="booklistmenu" fontSize="12" title="订单管理">
+					<util:CustomDataGrid id="mcdg11" width="100%" x="0" y="32" height="100%" visible="true">
+						<util:mygridcolumns>
+							<mx:DataGridColumn headerText="日期" dataField="id" editable="false"/>
+							<mx:DataGridColumn headerText="购买物品" dataField="statement" editable="false"/>
+							<mx:DataGridColumn headerText="是否发货" dataField="send" editable="false"/>
+						</util:mygridcolumns>
+					</util:CustomDataGrid>
+				</mx:Panel>	
+			</mx:ViewStack>
+		</mx:HBox>
+	</mx:VBox>
+	
+</mx:Application>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DateField xmlns:mx="http://www.adobe.com/2006/mxml"
+			  implements="mx.controls.listClasses.IListItemRenderer"
+			  focusIn="open()">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			override public function set data(value:Object):void{
+				if(listData){
+					var newDate:Date;
+					
+					if (value is String){
+						newDate = new Date(Date.parse(data as String));
+						super.data=newDate;
+					} 
+					else if (value is Date){
+						super.data=value as Date;
+					}
+				}        
+			}
+		]]>
+	</mx:Script>
+</mx:DateField>
+
+
+
+
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			public var cost:String;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var a,b,c:Number;
+				a=parseFloat(position.text);
+				b=parseFloat(costprice.text);
+				if(namel.text == ""){
+					Alert.show("请填写证券名称","提示");
+				}
+				else if(a%100!=0  || position.text=="")
+				{
+					Alert.show("请填写正确股数","提示");
+				}
+				else if(costprice.text=="")
+				{
+					Alert.show("请填写购入价","提示");
+				}
+				else{
+					c=a*b;
+					cost=c.toString();
+					dispatchEvent(new Event("newStocks",false));
+				}
+			}
+			
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				namel.text="";
+				node.text="";
+				position.text="";
+				costprice.text="";
+			}
+			
+			
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	<mx:TitleWindow x="0" y="0" width="400" height="300" layout="absolute" title="添加新股票" fontSize="12">
+		<mx:Button x="41" y="221" label="保存"  click="button1_clickHandler(event)"/>
+		<mx:Button x="164" y="221" label="重置"  click="button2_clickHandler(event)"/>
+		<mx:Button x="288" y="221" label="返回"  click="button3_clickHandler(event)"/>
+		<mx:Text x="71" y="25" text="证券代码"/>
+		<mx:Text x="71" y="60" text="证券名称"/>
+		<mx:Text x="71" y="105" text="购入股数"/>
+		<mx:Text x="71" y="140" text="购买价"/>
+		<mx:Text x="71" y="175" text="证券市场"/>
+		<mx:TextInput x="132" y="58" width="186" id="namel"/>
+		<mx:TextInput x="132" y="103" width="186" id="position"/>
+		<mx:TextInput x="132" y="138" width="186" id="costprice"/>
+		<mx:ComboBox x="132" y="172" width="186" id="market">
+			<mx:String>沪深A股</mx:String>
+			<mx:String>沪深B股</mx:String>
+			<mx:String>深证A股</mx:String>
+			<mx:String>深证B股</mx:String>
+		</mx:ComboBox>
+		<mx:TextInput x="132" y="25" width="186" id="node"/>
+	</mx:TitleWindow>
+</mx:Canvas>

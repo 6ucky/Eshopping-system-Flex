@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="application_creationCompleteHandler(event)" width="512" height="450" xmlns:util="ices.sh.util.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private var modelDetailWindow:Object;
+			private var j:String;
+			private var i:int=0;
+			protected function application_creationCompleteHandler(event):void
+			{
+				ro.getsummoney();
+			}
+			protected function ro_insert_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			protected function ro_insert_resultHandler(event:ResultEvent):void
+			{
+				
+			}
+			protected function ro_getmoney_resultHandler(event:ResultEvent):void
+			{
+				text1.text = event.result as String;
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				ro.insertbooklist();
+				dispatchEvent(new Event("qualifybuy",false));
+				PopUpManager.removePopUp(this);
+			}
+			protected function ro_insertbooklist_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("购买成功!","提示");
+			}
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="ro" destination="homesoftware">
+		<mx:method name="getsummoney" result="ro_getmoney_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+		<mx:method name="insertbooklist" result="ro_insertbooklist_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<util:CustomDataGrid x="10" y="10" width="472" height="322" id="boughtlist">
+		<util:mygridcolumns>
+			<mx:DataGridColumn headerText="商品名称" dataField="namel" editable="false"/>
+			<mx:DataGridColumn headerText="商品数量" dataField="boughtnum" editable="false"/>
+		</util:mygridcolumns>
+	</util:CustomDataGrid>
+	<mx:Button x="69" y="406" label="确认付款" width="100" height="34" fontSize="16" click="button2_clickHandler(event)"/>
+	<mx:Button x="327" y="406" label="返回" width="100" height="34" fontSize="16" click="button1_clickHandler(event)"/>
+	<mx:Label x="69" y="340" text="合计：" width="160" height="43" fontSize="20"/>
+	<mx:Text x="327" y="340" width="100" height="28" fontSize="20" id="text1"/>
+	
+</mx:Canvas>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="250" height="200" fontSize="12">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			public var cost:String;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var a,b,c:Number;
+				a=parseFloat(position.text);
+				b=parseFloat(costprice.text);
+				if(a%100!=0 || position.text=="")
+				{
+					Alert.show("请填写正确股数","提示");
+				}
+				else if(costprice.text=="")
+				{
+					Alert.show("请填写卖出价","提示");
+				}
+				else{
+					c=a*b;
+					cost=c.toString();
+					dispatchEvent(new Event("sellStocks",false));
+				}
+			}
+			
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				position.text="";
+				costprice.text="";
+			}
+			
+			
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:TitleWindow x="0" y="0" width="250" height="200" layout="absolute" title="卖出旧股票">
+		<mx:Button x="10" y="124" label="保存" click="button1_clickHandler(event)"/>
+		<mx:Button x="89" y="124" label="重置" click="button2_clickHandler(event)"/>
+		<mx:Button x="168" y="124" label="取消" click="button3_clickHandler(event)"/>
+		<mx:Text x="10" y="25" text="卖出股数"/>
+		<mx:Text x="10" y="72" text="卖出价"/>
+		<mx:TextInput x="66" y="23" width="143" id="position"/>
+		<mx:TextInput x="66" y="70" width="143" id="costprice"/>
+	</mx:TitleWindow>
+	
+</mx:Canvas>

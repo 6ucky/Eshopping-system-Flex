@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="300">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+					dispatchEvent(new Event("searchbook1",false));
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+					dispatchEvent(new Event("searchbook2",false));
+			}
+
+
+			protected function button3_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:TitleWindow x="0" y="0" width="400" height="300" layout="absolute" fontSize="14" title="查找">
+		<mx:Button x="57" y="192" label="查找" fontSize="12" click="button1_clickHandler(event)" width="56" height="26"/>
+		<mx:Button x="281" y="192" label="返回" fontSize="12" click="button3_clickHandler(event)" width="56" height="26"/>
+		<mx:Label x="57" y="20" text="平均工资"/>
+		<mx:Label x="57" y="74" text="类别"/>
+		<mx:Label x="57" y="133" text="个人喜好"/>
+		<mx:ComboBox x="141" y="22" text="10000/月" width="196"></mx:ComboBox>
+		<mx:ComboBox x="141" y="76" text="电脑办公" width="196"></mx:ComboBox>
+		<mx:ComboBox x="141" y="135" text="时尚" width="196"></mx:ComboBox>
+	</mx:TitleWindow>
+</mx:Canvas>

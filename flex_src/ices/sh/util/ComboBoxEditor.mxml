@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="hbox1_creationCompleteHandler(event)">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;			
+			
+			private var leafComboBox:ArrayCollection = new ArrayCollection([{type:"是"},{type:"否"}]);
+			[Bindable]
+			private var dataPro:ArrayCollection = leafComboBox;
+			public var typeChoose:String = "";
+			
+			public function initdata(value:ArrayCollection):void
+			{
+				dataPro = value;
+			}
+			
+			protected function hbox1_creationCompleteHandler(event:FlexEvent):void
+			{
+				typeChoose = data.isleaf;
+				for(var i:int = 0;i<dataPro.length;i++){
+					if(dataPro[i].type==data.isleaf){
+						myCB.selectedIndex = i;
+					}
+				}
+			}
+
+
+			protected function mycb_changeHandler(event:ListEvent):void
+			{
+				typeChoose = myCB.selectedItem.type;
+			}
+
+		]]>
+	</mx:Script>
+	<mx:ComboBox id="myCB" labelField="type" change="mycb_changeHandler(event)" dataProvider="{dataPro}" width="100%" height="100%"></mx:ComboBox>
+	
+</mx:HBox>

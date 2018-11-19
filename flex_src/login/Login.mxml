@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" width="100%" height="100%" backgroundColor="#FFFFFF" backgroundImage="@Embed(source='D:/Workspaces/davin/WebRoot/img/loginBG.jpg')">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			private function loginMethod():void
+			{
+				if(userName.text == ""){
+					Alert.show("请输入用户名!","提示");
+				}
+				else if(userName.text=="admin" || password.text=="admin"){
+					
+					ExternalInterface.call("function()  {window.location.href='http://localhost:8080/davin/userconfig.html';}");
+				}
+				else{
+					ro.verifyLogin(userName.text,password.text);
+				}
+			}
+
+			protected function reset_clickHandler(event:MouseEvent):void
+			{
+				co.username("游客");
+			}
+
+			protected function login_clickHandler(event:MouseEvent):void
+			{
+				loginMethod();
+			}
+
+
+			protected function userName_enterHandler(event:FlexEvent):void
+			{
+				loginMethod();
+			}
+
+
+			protected function password_enterHandler(event:FlexEvent):void
+			{
+				loginMethod();
+			}
+			protected function ro_verify_resultHandler(event:ResultEvent):void
+			{
+				var returnString : String = event.result as String;
+				if(returnString == "success"){
+					//Alert.show("登陆成功!","提示");
+					co.username(userName.text);
+				}
+				else if(returnString == "wrongInput"){
+					Alert.show("用户名或密码错误!","提示");
+				}
+				else if(returnString == "failed"){
+					Alert.show("数据库操作异常!","提示");
+				}
+			}
+			protected function ro_verify_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			protected function co_username_resultHandler(event:ResultEvent):void
+			{
+				ExternalInterface.call("function()  {window.location.href='http://localhost:8080/davin/davin.html';}");
+			}
+			protected function ro_insert_resultHandler(event:ResultEvent):void
+			{
+				Alert.show("添加成功!","提示");
+				label1.visible=true;
+				label2.visible=true;
+				label3.visible=false;
+				label4.visible=false;
+				label5.visible=false;
+				userName.visible=true;
+				password.visible=true;
+				login1.visible=true;
+				reset.visible=true;
+				insert1.visible=true;
+				newname.visible=false;
+				newpassword.visible=false;
+				repeatpassword.visible=false;
+				insert2.visible=false;
+				return1.visible=false;
+				newname.text="";
+				newpassword.text="";
+				repeatpassword.text="";
+			}
+			protected function ro_insert_faultHandler(event:FaultEvent):void
+			{
+				Alert.show("操作失败!","提示");
+			}
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				label1.visible=false;
+				label2.visible=false;
+				label3.visible=true;
+				label4.visible=true;
+				label5.visible=true;
+				userName.visible=false;
+				password.visible=false;
+				login1.visible=false;
+				reset.visible=false;
+				insert1.visible=false;
+				newname.visible=true;
+				newpassword.visible=true;
+				repeatpassword.visible=true;
+				insert2.visible=true;
+				return1.visible=true;
+				
+			}
+
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				label1.visible=true;
+				label2.visible=true;
+				label3.visible=false;
+				label4.visible=false;
+				label5.visible=false;
+				userName.visible=true;
+				password.visible=true;
+				login1.visible=true;
+				reset.visible=true;
+				insert1.visible=true;
+				newname.visible=false;
+				newpassword.visible=false;
+				repeatpassword.visible=false;
+				insert2.visible=false;
+				return1.visible=false;
+			}
+
+
+			protected function insert2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(newpassword.text!=repeatpassword.text)
+				{
+					Alert.show("密码输入错误!","提示");
+					newpassword.text="";
+					repeatpassword.text="";
+				}
+				else
+				var insertItem:Object = new Object();
+				insertItem.username = newname.text;
+				insertItem.password = newpassword.text;
+				ro.insertLogin(insertItem);
+			}
+
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="co" destination="homesoftware">
+		<mx:method name="username" result="co_username_resultHandler(event)" fault="ro_verify_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<mx:RemoteObject id="ro" destination="loginObject">
+		<mx:method name="verifyLogin" result="ro_verify_resultHandler(event)" fault="ro_verify_faultHandler(event)"/>
+		<mx:method name="insertLogin" result="ro_insert_resultHandler(event)" fault="ro_insert_faultHandler(event)"/>
+	</mx:RemoteObject>
+	<mx:Panel layout="absolute" title="登陆" fontSize="18" minHeight="280" minWidth="355" x="226" y="93" borderColor="#869CA7" color="#FFFFFF" id="panel1">
+		<mx:Label x="30" y="36" text="用户名" color="#000000" id="label1"/>
+		<mx:TextInput x="110" y="34" width="201" id="userName" enter="userName_enterHandler(event)" color="#000000" text="admin"/>
+		<mx:Label x="30" y="99" text="密码" color="#000000" id="label2"/>
+		<mx:TextInput x="110" y="97" width="201" displayAsPassword="true" id="password" enter="password_enterHandler(event)" color="#000000"/>
+		<mx:Button x="10" y="167" label="登陆" id="login1" click="login_clickHandler(event)" color="#000000"/>
+		<mx:Button x="87" y="167" label="游客登录" id="reset" click="reset_clickHandler(event)" color="#000000"/>
+		<mx:Button x="204" y="167" label="添加新用户"  id="insert1" color="#000000" click="button1_clickHandler(event)"/>
+		<mx:TextInput x="140" y="33" id="newname" visible="false" color="#000000"/>
+		<mx:TextInput x="140" y="83" id="newpassword" visible="false" color="#000000" displayAsPassword="true"/>
+		<mx:TextInput x="140" y="133" id="repeatpassword" visible="false" color="#000000" displayAsPassword="true"/>
+		<mx:Label x="35" y="35" text="新的用户名" color="#000000" id="label3" visible="false"/>
+		<mx:Label x="35" y="85" text="密码" color="#000000" id="label4" visible="false"/>
+		<mx:Label x="35" y="135" text="重复密码" color="#000000" id="label5" visible="false"/>
+		<mx:Button x="82" y="183" label="添加" color="#000000" id="insert2" visible="false" click="insert2_clickHandler(event)"/>
+		<mx:Button x="204" y="183" label="返回" color="#000000"  id="return1" click="button2_clickHandler(event)" visible="false"/>
+	</mx:Panel>
+</mx:Application>

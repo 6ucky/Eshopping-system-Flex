@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="600" height="350" xmlns:util="ices.sh.util.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				date.text="";
+				money.text="";
+				classify.text="";
+				people.text="";
+			}
+
+			protected function button2_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:TitleWindow width="600" height="350" layout="absolute" fontSize="12" title="水费">
+		<util:MultipleChoiceDataGrid x="2" y="168" width="578" height="140">
+			<util:mygridcolumns>
+				<mx:DataGridColumn headerText="交款人" dataField="people" editable="false"/>
+				<mx:DataGridColumn headerText="日期" dataField="date" editable="false"/>
+				<mx:DataGridColumn headerText="钱数" dataField="money" editable="false"/>
+				<mx:DataGridColumn headerText="缴款方式" dataField="classify" editable="false"/>
+			</util:mygridcolumns>
+		</util:MultipleChoiceDataGrid>
+		<mx:Button x="174" y="130" label="添加"/>
+		<mx:Button x="354" y="130" label="返回" click="button2_clickHandler(event)"/>
+		<mx:Text x="89" y="102" text="日期"/>
+		<mx:Text x="89" y="38" text="钱数" visible="true"/>
+		<mx:Text x="89" y="71" text="缴款方式"/>
+		<mx:Text x="89" y="8" text="交款人"/>
+		<mx:DateField x="174" y="100" width="232" id="date"/>
+		<mx:TextInput x="174" y="36" width="232" id="money"/>
+		<mx:ComboBox x="174" y="68" width="232" id="classify"></mx:ComboBox>
+		<mx:TextInput x="174" y="6" width="232" height="24" id="people"/>
+		<mx:Button x="264" y="130" label="重置" click="button1_clickHandler(event)"/>
+	</mx:TitleWindow>
+</mx:Canvas>

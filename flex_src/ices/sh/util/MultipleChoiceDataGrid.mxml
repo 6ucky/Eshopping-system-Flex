@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:util="ices.sh.util.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.ListEvent;
+			[Bindable]
+			private var mypagedata:ArrayCollection = new ArrayCollection();//当前也没种该显示的记录
+			[Bindable]
+			public var mygridcolumns:Array;
+			public var mydata:ArrayCollection;//所有的数据
+			public var pagecount:int=10;//表示每页记录的条数,默认10条,可以由用户自行定义
+			public var curpage:int;//当前的页码
+			public var totalpage:int;//一共的页数
+			public var totalcount:int;//一共的记录条数
+			
+			public var colNum:int;
+			public var rowNum:int;
+			
+			public function initdata(value:ArrayCollection,count:int):void
+			{
+				pagecount = count;
+				mydata = value;//将所有数据都赋值给mydata变量
+				mypagedata.removeAll();//移出当前页面中所有数据记录
+				
+				if(mydata.length>0 && null!=mydata)	{
+					totalcount = mydata.length;
+					totalpage = (totalcount + pagecount - 1) / pagecount;
+					setPager(0);
+					inputpage.minimum=1;
+					inputpage.maximum=totalpage;
+				}
+				else{
+					totalcount = 0;
+					totalpage = 0;
+					curpage = 0;
+					inputpage.minimum = 0;
+					inputpage.maximum = 0;
+					pagedetail.text = "第0页/共0页   共0条纪录";
+				}
+			}
+			public function setPager(value:int):void
+			{
+				if(value<0 || value>totalpage-1) return;
+				curpage = value;
+				var curNum:int = value*pagecount;//计算出要跳转到的页面种的第一条记录在所有的记录种是第几条记录
+				mypagedata.removeAll();//移出变量中的数据,以便插入新数据,页面中显示的是这个变量中的数据
+				for(var i:int=0;curNum<mydata.length&&i<pagecount;i++,curNum++)
+					//循环的次数既要小于所有的记录数,也要小于每个页面能显示的记录数;并且curNum变量中的值也要增加
+				{
+					mypagedata.addItem(mydata.getItemAt(curNum));//依次抽取记录
+				}
+				var temp:int = curpage+1;//页码中第一张页面是0,也就是说实际显示的页码是+1后的值
+				pagedetail.text = "第"+temp+"页/共"+totalpage+"页   共"+totalcount+"条记录";
+			}
+			
+			protected function cudg_itemClickHandler(event:ListEvent):void
+			{
+				rowNum = event.rowIndex;
+				colNum = event.columnIndex;
+				cudg.dispatchEvent(new Event("clickedColumn",false));
+			}
+			
+			
+			
+			protected function cudg_itemDoubleClickHandler(event:ListEvent):void
+			{
+				rowNum = event.rowIndex;
+				colNum = event.columnIndex;
+				cudg.dispatchEvent(new Event("doubleClickedColumn",false));
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<util:CheckBoxDataGrid id="cudg" doubleClickEnabled="true" itemDoubleClick="cudg_itemDoubleClickHandler(event)" itemClick="cudg_itemClickHandler(event)" dataProvider="{mypagedata}" columns="{mygridcolumns}" width="100%" height="100%" fontSize="13" horizontalGridLines="true" verticalGridLines="true" allowMultipleSelection="true" editable="true">
+	</util:CheckBoxDataGrid>
+	<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle" height="34">
+		<!--<mx:LinkButton label="全选"/>
+		<mx:LinkButton label="全不选"/>-->
+		<mx:Spacer width="100%" height="1"></mx:Spacer>
+		<mx:Label text="第0页/共0页" id="pagedetail" fontSize="13"/>
+		<mx:LinkButton label="首页" click="setPager(0)" fontSize="13"/>
+		<mx:LinkButton label="上一页" click="setPager(curpage-1)" fontSize="13"/>
+		<mx:LinkButton label="下一页" click="setPager(curpage+1)" fontSize="13"/>
+		<mx:LinkButton label="末页" click="setPager(totalpage-1)" fontSize="13"/>
+		<mx:NumericStepper id="inputpage" stepSize="1" minimum="0" maximum="0" cornerRadius="0" fontSize="13"/>
+		<mx:LinkButton label="跳转" click="setPager(inputpage.value-1)" fontSize="13"/>
+	</mx:HBox>
+</mx:VBox>
+

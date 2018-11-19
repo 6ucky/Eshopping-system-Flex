@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="application1_creationCompleteHandler(event)" fontSize="14">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.XMLListCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+
+			[Bindable]
+			private var company:XML = 
+				<list>
+					<department name="部门A">
+						<employee name="小A"/> 
+						<employee name="小B"/>
+					</department>
+					<department name="部门B"> 
+						<employee name="小C"/>
+						<employee name="小D"/>
+					</department>
+				</list>;
+			[Bindable] 
+			private var companyData:XMLListCollection = new XMLListCollection(company.department);
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+
+
+			protected function tree_changeHandler(event:ListEvent):void
+			{
+				var selectedNode:XML=Tree(event.target).selectedItem as XML;
+				var target:String ="right";
+				Alert.show(selectedNode.attribute("name"),"提示");
+			}
+
+		]]>
+	</mx:Script>
+	<mx:Tree x="0" y="0" id="tree" dataProvider="{companyData}" labelField ="@name" width="271" change="tree_changeHandler(event)" height="247"></mx:Tree>
+	
+</mx:Application>

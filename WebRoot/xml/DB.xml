@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<className>org.postgresql.Driver</className>
+<url>jdbc:postgresql://127.0.0.1:5432/ICES_SHMB</url>
+<user>postgres</user>
+<password>123</password>
+</root>
